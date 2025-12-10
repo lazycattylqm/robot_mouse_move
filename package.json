@@ -1,26 +1,23 @@
 {
-  "name": "robot_mouse_move",
+  "name": "browser-auto-typer",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Browser-based auto typer using Puppeteer - No system permissions required!",
+  "main": "browser_typer.js",
   "scripts": {
-    "start": "node index.js",
-    "type": "node keyboard_typer.js",
-    "type:browser": "node browser_typer.js",
-    "test:permission": "node test_permission.js",
+    "start": "node browser_typer.js",
+    "dev": "node browser_typer.js --no-headless",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "auto-typer",
+    "puppeteer",
+    "browser-automation",
+    "typing-simulator"
+  ],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.5.2",
   "dependencies": {
-    "puppeteer": "^24.32.1",
-    "robotjs": "^0.6.0"
-  },
-  "pnpm": {
-    "ignoredBuiltDependencies": [
-      "robotjs"
-    ]
+    "puppeteer": "^24.32.1"
   }
 }
