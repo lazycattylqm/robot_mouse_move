@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自动打字编辑器</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', monospace;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: #e2e8f0;
+    }
+
+    .header {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #60a5fa;
+      margin-bottom: 0.5rem;
+    }
+
+    .stats {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.875rem;
+      color: #94a3b8;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stat-label {
+      color: #64748b;
+    }
+
+    .stat-value {
+      color: #60a5fa;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .editor-wrapper {
+      flex: 1;
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .editor-header {
+      background: rgba(15, 23, 42, 0.5);
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .editor-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+
+    .editor-dot:nth-child(2) {
+      background: #f59e0b;
+    }
+
+    .editor-dot:nth-child(3) {
+      background: #10b981;
+    }
+
+    #editor {
+      flex: 1;
+      width: 100%;
+      padding: 2rem;
+      font-size: 1rem;
+      line-height: 1.8;
+      color: #e2e8f0;
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: inherit;
+    }
+
+    #editor::placeholder {
+      color: #475569;
+    }
+
+    #editor::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #editor::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    #editor::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.5);
+      border-radius: 4px;
+    }
+
+    #editor::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.7);
+    }
+
+    .footer {
+      padding: 1rem 2rem;
+      text-align: center;
+      color: #64748b;
+      font-size: 0.875rem;
+      background: rgba(15, 23, 42, 0.5);
+      border-top: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .cursor-blink {
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      50% {
+        opacity: 1;
+      }
+
+      51%,
+      100% {
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>⌨️ 自动打字编辑器</h1>
+    <div class="stats">
+      <div class="stat-item">
+        <span class="stat-label">单词数:</span>
+        <span class="stat-value" id="wordCount">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">字符数:</span>
+        <span class="stat-value" id="charCount">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">行数:</span>
+        <span class="stat-value" id="lineCount">1</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="editor-wrapper">
+      <div class="editor-header">
+        <div class="editor-dot"></div>
+        <div class="editor-dot"></div>
+        <div class="editor-dot"></div>
+      </div>
+      <textarea id="editor" placeholder="等待自动输入..." spellcheck="false"></textarea>
+    </div>
+  </div>
+
+  <div class="footer">
+    由 Puppeteer 驱动 | 无需系统权限
+  </div>
+
+  <script>
+    const editor = document.getElementById('editor');
+    const wordCount = document.getElementById('wordCount');
+    const charCount = document.getElementById('charCount');
+    const lineCount = document.getElementById('lineCount');
+
+    function updateStats () {
+      const text = editor.value;
+      const chars = text.length;
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+      const lines = text ? text.split('\n').length : 1;
+
+      wordCount.textContent = words;
+      charCount.textContent = chars;
+      lineCount.textContent = lines;
+    }
+
+    editor.addEventListener('input', updateStats);
+
+    // 自动聚焦
+    editor.focus();
+  </script>
+</body>
+
+</html>
