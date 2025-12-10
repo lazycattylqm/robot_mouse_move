@@ -141,6 +141,7 @@ pnpm install
 模拟键盘在当前焦点窗口中持续输入文字。
 
 #### 运行
+
 ```bash
 pnpm type
 # 或
@@ -148,6 +149,7 @@ node keyboard_typer.js
 ```
 
 #### 自定义选项
+
 ```bash
 node keyboard_typer.js -c 5          # 倒计时 5 秒
 node keyboard_typer.js -l 0.5        # 50% 概率换行
@@ -155,6 +157,7 @@ node keyboard_typer.js --help        # 查看帮助
 ```
 
 #### 特点
+
 - ✅ 持续输入，直到按 Ctrl+C 停止
 - ✅ 模拟真实打字速度（时快时慢）
 - ✅ 偶尔打错字后删除重打（5% 概率）
@@ -167,11 +170,13 @@ node keyboard_typer.js --help        # 查看帮助
 在浏览器中打开编辑器页面，自动输入文字。**完全不需要系统权限！**
 
 #### 安装依赖
+
 ```bash
 pnpm add puppeteer
 ```
 
 #### 运行
+
 ```bash
 pnpm type:browser
 # 或
@@ -179,6 +184,7 @@ node browser_typer.js
 ```
 
 #### 自定义选项
+
 ```bash
 # 自动检测系统 Chrome（推荐）
 node browser_typer.js
@@ -200,6 +206,7 @@ node browser_typer.js --help
 ```
 
 #### 默认 Chrome 路径
+
 程序会自动检测操作系统并使用对应的 Chrome 路径：
 
 - **macOS**: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`
@@ -209,6 +216,7 @@ node browser_typer.js --help
 如果 Chrome 安装在其他位置，使用 `-p` 参数指定路径。
 
 #### 特点
+
 - ✅ **无需系统权限** - 在浏览器内操作
 - ✅ **美观界面** - 现代化深色主题编辑器
 - ✅ **实时统计** - 显示单词数、字符数、行数
@@ -219,13 +227,13 @@ node browser_typer.js --help
 
 #### 对比
 
-| 特性 | Puppeteer 方案 | RobotJS 方案 |
-|------|----------------|--------------|
-| 系统权限 | ❌ 不需要 | ✅ 需要 |
-| 可视化界面 | ✅ 美观网页 | ❌ 需切换窗口 |
-| 跨平台兼容 | ✅ 完美支持 | ⚠️ 编译复杂 |
-| 实时统计 | ✅ 有 | ❌ 无 |
-| 控制范围 | 🌐 浏览器内 | 💻 全局控制 |
+| 特性       | Puppeteer 方案 | RobotJS 方案  |
+| ---------- | -------------- | ------------- |
+| 系统权限   | ❌ 不需要      | ✅ 需要       |
+| 可视化界面 | ✅ 美观网页    | ❌ 需切换窗口 |
+| 跨平台兼容 | ✅ 完美支持    | ⚠️ 编译复杂   |
+| 实时统计   | ✅ 有          | ❌ 无         |
+| 控制范围   | 🌐 浏览器内    | 💻 全局控制   |
 
 ## 技术栈
 
